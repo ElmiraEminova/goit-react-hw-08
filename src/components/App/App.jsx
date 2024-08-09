@@ -1,30 +1,26 @@
-import ContactForm from "../ContactForm/ContactForm";
-import SearchBox from "../SearchBox/SearchBox";
-import ContactList from "../ContactList/ContactList";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { fetchContacts } from "../../redux/contactsOps";
-import {selectLoading, selectError} from "../../redux/contactsSlice"
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
+import Layout from "../Layout/Layout";
+ 
+const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
+const ContactsPage = lazy(() => import("../../pages/ContactsPage/ContactsPage"));
+const LoginPage = lazy(() => import("../../pages/LoginPage/LoginPage"));
+const RegistrationPage = lazy(()=> import("../../pages/RegistrationPage/RegistrationPage"))
 
 export default function App() {
 
-  const dispatch = useDispatch();
-  const loading = useSelector(selectLoading);
-  const error = useSelector(selectError);
-  
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch])
-  
     return (
-    <div >
-      <h1>Phonebook</h1>
-        <ContactForm  />
-        <SearchBox />
-        {loading && <p>Loading....</p>}
-        {error && <p>Something went wrong, please reload the page</p>}
-        <ContactList />
-          
+      <div >
+        <Layout>
+        <Suspense fallback={null}>
+            <Routes>
+              <Route path='/' element={HomePage} />
+              <Route path='/contacts' element={ContactsPage} />
+              <Route path='/login' element={LoginPage} />
+              <Route path='/register' element={RegistrationPage} />
+            </Routes>
+          </Suspense>
+        </Layout>  
     </div>
   );
 }
